@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager>
 {
-    private ObseravableProperty<bool> _mouseLClick = new();
-    private ObseravableProperty<bool> _mouseRClick = new();
+    public ObseravableProperty<bool> MouseLClick = new();
+    public ObseravableProperty<bool> MouseRClick = new();
 
     private Vector3 _moveDirection;
     public Vector3 MoveDirection
@@ -56,6 +56,9 @@ public class InputManager : Singleton<InputManager>
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            // 훅에 걸려있을 때 점프시 훅 제거
+            if (!PlayerManager.Instance.IsHookMove)
+                PlayerManager.Instance.IsHooked = false;
             IsJump = true;
         }
         else
@@ -73,19 +76,23 @@ public class InputManager : Singleton<InputManager>
 
         if (Input.GetMouseButtonDown(0))
         {
-            _mouseLClick.Value = true;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            _mouseLClick.Value = false;
+            MouseLClick.Value = !MouseLClick.Value;
+            Debug.Log("Mouse Left Clicked");
         }
         if (Input.GetMouseButtonDown(1))
         {
-            _mouseRClick.Value = true;
+            MouseRClick.Value = !MouseRClick.Value;
+            Debug.Log("Mouse Right Clicked");
         }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            _mouseRClick.Value = false;
-        }
+    }
+
+    private void SubscribedEvent()
+    {
+
+    }
+
+    private void UnsubscribedEvent()
+    {
+
     }
 }

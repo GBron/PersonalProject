@@ -1,4 +1,5 @@
 using Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -6,18 +7,31 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpPower;
     [SerializeField] private CinemachineVirtualCamera _camera;
+    [SerializeField] private Transform _muzzle;
+    [SerializeField] public Transform _center;
     private Rigidbody _rigid;
     private bool _isGrounded;
-    
+    private Vector3 _destPos;
+
 
     private void Start()
     {
         Init();
+        PlayerManager.Instance.HookedEvent.AddListener(SetDestPos);
     }
 
     private void FixedUpdate()
     {
-        PlayerMove();
+        if (!PlayerManager.Instance.IsHooked)
+        {
+            _rigid.useGravity = true; // 훅에 걸려있지 않을 때 중력 활성화
+            PlayerMove();
+        }
+        else
+        {
+            _rigid.useGravity = false; // 훅에 걸려있을 때 중력 비활성화
+            HookMove();
+        }
     }
 
     private void Update()
@@ -40,6 +54,11 @@ public class PlayerMovement : MonoBehaviour
         {
             _isGrounded = false;
         }
+    }
+
+    private void OnDisable()
+    {
+        PlayerManager.Instance.HookedEvent.RemoveListener(SetDestPos);
     }
 
     private void Init()
@@ -84,5 +103,26 @@ public class PlayerMovement : MonoBehaviour
 
         _camera.transform.localRotation = Quaternion.Euler(clampedMouseY, 0, 0);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    private void SetDestPos(Vector3 destPos)
+    {
+        _destPos = destPos; 
+    }
+
+    private void HookMove()
+    {
+        Vector3 moveDir = (_destPos - _center.position).normalized;
+        float distance = Vector3.Distance(_center.position, _destPos);
+        if (distance > 1.45f)
+        {
+            PlayerManager.Instance.IsHookMove = true;
+            _rigid.velocity = moveDir * 20;
+        }
+        else
+        {
+            PlayerManager.Instance.IsHookMove = false;
+            _rigid.velocity = Vector3.zero;
+        }
     }
 }
