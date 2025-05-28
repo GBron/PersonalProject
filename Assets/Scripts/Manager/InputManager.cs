@@ -3,12 +3,24 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager>
 {
+    private ObseravableProperty<bool> _mouseLClick = new();
+    private ObseravableProperty<bool> _mouseRClick = new();
+
     private Vector3 _moveDirection;
     public Vector3 MoveDirection
     {
         get { return _moveDirection; }
         set { _moveDirection = value; }
     }
+
+    private Vector2 _mousePosition;
+    public Vector2 MousePosition
+    {
+        get { return _mousePosition; }
+        set { _mousePosition = value; }
+    }
+
+    [field: SerializeField] public bool IsJump { get; private set; }
 
     private void Awake()
     {
@@ -17,6 +29,7 @@ public class InputManager : Singleton<InputManager>
 
     private void Update()
     {
+        MouseInput();
         MoveInput();
     }
 
@@ -26,7 +39,7 @@ public class InputManager : Singleton<InputManager>
         _moveDirection = Vector3.zero;
 
         if (Input.GetKey(KeyCode.W))
-        {
+        { 
             _moveDirection += Vector3.forward;
         }
         if (Input.GetKey(KeyCode.S))
@@ -41,7 +54,38 @@ public class InputManager : Singleton<InputManager>
         {
             _moveDirection += Vector3.right;
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            IsJump = true;
+        }
+        else
+        {
+            IsJump = false;
+        }
 
         _moveDirection.Normalize();
+    }
+
+    private void MouseInput()
+    {
+        _mousePosition.x = Input.GetAxis("Mouse X");
+        _mousePosition.y = Input.GetAxis("Mouse Y");
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _mouseLClick.Value = true;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            _mouseLClick.Value = false;
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            _mouseRClick.Value = true;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            _mouseRClick.Value = false;
+        }
     }
 }
