@@ -11,4 +11,7 @@ public class PlayerStats
     public float JumpPower { get; set; }
     public float HookSpeed { get; set; }
     public float HookRange { get; set; }
+    public float HookCooldown { get; set; }
+    public int HookCount { get; set; }
+    public int BulletCount { get; set; }
 }
