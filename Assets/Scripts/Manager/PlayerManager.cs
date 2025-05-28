@@ -12,6 +12,7 @@ public class PlayerManager : Singleton<PlayerManager>
     public ObjectPool _hookPool;
     private Vector3 _spawnPoint;
     public PlayerMovement _player;
+    public ObseravableProperty<int> CurHookCount = new ObseravableProperty<int>();
 
     public bool IsHooked { get; set; } = false;
     public bool IsHookMove { get; set; } = false;
@@ -43,6 +44,9 @@ public class PlayerManager : Singleton<PlayerManager>
         _stats.HookRange = 30f;
         _stats.JumpPower = 5f;
         _stats.BulletCount = 3;
+        _stats.HookCooldown = 5f;
+        _stats.HookCount = 3;
+        CurHookCount.Value = _stats.HookCount;
     }
 
     public Hook GetHook()
