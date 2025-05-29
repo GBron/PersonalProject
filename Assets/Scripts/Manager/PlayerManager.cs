@@ -7,12 +7,16 @@ using UnityEngine.Events;
 public class PlayerManager : Singleton<PlayerManager>
 {
     [SerializeField] private PooledObject _hookPrefab;
+    [SerializeField] private PooledObject _bulletPrefab;
     [SerializeField] private GameObject _playerPrefab;
+
     public PlayerStats _stats;
     public ObjectPool _hookPool;
+    public ObjectPool _bulletPool;
     private Vector3 _spawnPoint;
     public PlayerMovement _player;
     public ObseravableProperty<int> CurHookCount = new ObseravableProperty<int>();
+    public ObseravableProperty<int> CurBulletCount = new ObseravableProperty<int>();
 
     public bool IsHooked { get; set; } = false;
     public bool IsHookMove { get; set; } = false;
@@ -37,6 +41,7 @@ public class PlayerManager : Singleton<PlayerManager>
         SingletonInit();
         _stats = new PlayerStats();
         _hookPool = new ObjectPool(transform, _hookPrefab, 3);
+        _bulletPool = new ObjectPool(transform, _bulletPrefab, 3);
         _stats.MaxHp.Value = 100;
         _stats.CurHp.Value = _stats.MaxHp.Value;
         _stats.MoveSpeed = 5f;
@@ -47,6 +52,7 @@ public class PlayerManager : Singleton<PlayerManager>
         _stats.HookCooldown = 5f;
         _stats.HookCount = 3;
         CurHookCount.Value = _stats.HookCount;
+        CurBulletCount.Value = _stats.BulletCount;
     }
 
     public Hook GetHook()
@@ -54,6 +60,10 @@ public class PlayerManager : Singleton<PlayerManager>
         return _hookPool.PopPool() as Hook;
     }
 
+    public Bullet GetBullet()
+    {
+        return _bulletPool.PopPool() as Bullet;
+    }
 
     private void SubscribedEvent()
     {
