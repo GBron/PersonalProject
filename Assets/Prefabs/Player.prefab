@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3109323783075604373}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 899496503236673225}
   - component: {fileID: 5714991510254072354}
   - component: {fileID: 2162191000259434173}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7639396893688205324}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 5138111960650424894}
   - component: {fileID: 1053888657196573703}
   - component: {fileID: 6023467541324148558}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3193744619619400070}
   - component: {fileID: 7494787269487104065}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}

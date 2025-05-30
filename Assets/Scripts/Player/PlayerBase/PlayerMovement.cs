@@ -114,6 +114,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 moveDir = (_destPos - _center.position).normalized;
         float distance = Vector3.Distance(_center.position, _destPos);
+
+        // 훅이 지형에 닿을 경우 플레이어가 날아가는 로직. 날아가는 동안은 훅을 발사할 수 없음.
         if (distance > 1.45f)
         {
             PlayerManager.Instance.IsHookMove = true;

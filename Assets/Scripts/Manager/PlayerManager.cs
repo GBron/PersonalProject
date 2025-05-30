@@ -15,8 +15,7 @@ public class PlayerManager : Singleton<PlayerManager>
     public ObjectPool _hookPool;
     public ObjectPool _bulletPool;
     public PlayerMovement _player;
-    public ObseravableProperty<int> CurHookCount = new ObseravableProperty<int>();
-    public ObseravableProperty<int> CurBulletCount = new ObseravableProperty<int>();
+    
 
     public bool IsHooked { get; set; } = false;
     public bool IsHookMove { get; set; } = false;
@@ -30,7 +29,6 @@ public class PlayerManager : Singleton<PlayerManager>
         GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
         _player = playerInstance.GetComponent<PlayerMovement>();
     }
-
     private void OnDestroy()
     {
         UnsubscribedEvent();
@@ -40,6 +38,7 @@ public class PlayerManager : Singleton<PlayerManager>
     {
         SingletonInit();
         _stats = new PlayerStats();
+        _stats.IsDied.Value = false;
         _stats.MaxHp.Value = 100;
         _stats.CurHp.Value = _stats.MaxHp.Value;
         _stats.MoveSpeed = 5f;
@@ -49,8 +48,8 @@ public class PlayerManager : Singleton<PlayerManager>
         _stats.BulletCount = 3;
         _stats.HookCooldown = 1f;
         _stats.HookCount = 5;
-        CurHookCount.Value = _stats.HookCount;
-        CurBulletCount.Value = _stats.BulletCount;
+        _stats.CurHookCount.Value = _stats.HookCount;
+        _stats.CurBulletCount.Value = _stats.BulletCount;
         _hookPool = new ObjectPool(transform, _hookPrefab, _stats.HookCount);
         _bulletPool = new ObjectPool(transform, _bulletPrefab, _stats.BulletCount);
     }
@@ -63,6 +62,22 @@ public class PlayerManager : Singleton<PlayerManager>
     public Bullet GetBullet()
     {
         return _bulletPool.PopPool() as Bullet;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _stats.CurHp.Value -= damage;
+
+        if (_stats.CurHp.Value <= 0)
+        {
+            Dying();
+        }
+    }
+
+    private void Dying()
+    {
+        // TODO: 플레이어가 사망했을 때 카메라 이동 후 사망 애니메이션 진행
+        _stats.IsDied.Value = true;
     }
 
     private void SubscribedEvent()

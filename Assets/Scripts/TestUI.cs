@@ -7,21 +7,28 @@ public class TestUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text _hookCount;
     [SerializeField] private TMP_Text _bulletCount;
+    [SerializeField] private TMP_Text _hpCount;
 
     private void Start()
     {
-        PlayerManager.Instance.CurHookCount.Subscribe(SetHookUI);
-        PlayerManager.Instance.CurBulletCount.Subscribe(SetBulletUI);
+        PlayerManager.Instance._stats.CurHookCount.Subscribe(SetHookUI);
+        PlayerManager.Instance._stats.CurBulletCount.Subscribe(SetBulletUI);
+        PlayerManager.Instance._stats.CurHp.Subscribe(SetHpUI);
         SetHookUI(0);
         SetBulletUI(0);
+        SetHpUI(0);
     }
 
     private void SetHookUI(int value)
     {
-        _hookCount.text = PlayerManager.Instance.CurHookCount.Value.ToString();
+        _hookCount.text = PlayerManager.Instance._stats.CurHookCount.Value.ToString();
     }
     private void SetBulletUI(int value)
     {
-        _bulletCount.text = PlayerManager.Instance.CurBulletCount.Value.ToString();
+        _bulletCount.text = PlayerManager.Instance._stats.CurBulletCount.Value.ToString();
+    }
+    private void SetHpUI(int value)
+    {
+        _hpCount.text = PlayerManager.Instance._stats.CurHp.Value.ToString();
     }
 }

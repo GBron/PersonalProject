@@ -10,7 +10,7 @@ public class Bullet : PooledObject
         // 플레이어가 가까이 가면 총알 회수
         if (other.gameObject.layer == 3)
         {
-            PlayerManager.Instance.CurBulletCount.Value++;
+            PlayerManager.Instance._stats.CurBulletCount.Value++;
             ReturnPool();
         }
     }

@@ -44,6 +44,14 @@ public class Hook : PooledObject
             PlayerManager.Instance.IsHooked = true;
             PlayerManager.Instance.HookedEvent.Invoke(hookDest);
         }
+        else if (collision.gameObject.layer == 9)
+        {
+            _isFlying = false;
+            Rigid.velocity = Vector3.zero;
+            ReturnPool();
+            collision.gameObject.GetComponent<EnemyController>()?.SetDetected();
+            Debug.Log("적에게는 훅을 걸 수가 없습니다! 적이 당신을 발견했습니다!");
+        }
     }
 
     public void SetHookShot(Vector3 startPos, Quaternion startRot)

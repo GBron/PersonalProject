@@ -19,17 +19,18 @@ public class Shot : MonoBehaviour
     private void GunShot(bool value)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000000f, _ignoreLayer) && PlayerManager.Instance.CurBulletCount.Value > 0)
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, _ignoreLayer) && PlayerManager.Instance._stats.CurBulletCount.Value > 0)
         {
-            Debug.Log($"{hit.collider.name}에 명중");
-            if (hit.collider.gameObject.layer == 8)
+            if (hit.collider.gameObject.layer == 9)
             {
                 // 적에게 명중했을 때 할 로직
+                Debug.Log($"적 명중");
+                hit.transform.GetComponent<EnemyController>()?.TakeDamage(1);
             }
             else
             {
                 // 적이 아니라면 닿은 곳에 총알을 생성
-                PlayerManager.Instance.CurBulletCount.Value--;
+                PlayerManager.Instance._stats.CurBulletCount.Value--;
                 Bullet bullet = PlayerManager.Instance.GetBullet();
                 bullet.transform.SetParent(null);
                 bullet.transform.position = hit.point + hit.normal;
