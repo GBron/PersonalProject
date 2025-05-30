@@ -68,7 +68,7 @@ public class EnemyController : MonoBehaviour
 
     private void Detecting()
     {
-        _head.transform.Rotate(Vector3.up * 10f * Time.deltaTime);
+        _head.transform.Rotate(Vector3.up * 30f * Time.deltaTime);
 
         // 플레이어 탐색
         if(Physics.OverlapSphereNonAlloc(_head.transform.position, _detectRange, _cols, _playerLayer) > 0)
@@ -95,7 +95,7 @@ public class EnemyController : MonoBehaviour
     private void Trace()
     {
         // 플레이어를 바라봄
-        _head.transform.LookAt(PlayerManager.Instance._player._center);
+        _head.transform.LookAt(PlayerManager.Instance.Player._center);
 
         // 플레이어에게 계속 레이캐스트를 쏘며 플레이어가 시야 내에 있는지 확인
         if (Physics.Raycast(_head.transform.position, (_cols[0].transform.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange))
@@ -132,7 +132,7 @@ public class EnemyController : MonoBehaviour
         EnemyBullet bullet = _bulletPool.PopPool() as EnemyBullet;
         bullet.transform.position = _muzzle.position;
         bullet.transform.rotation = _muzzle.rotation;
-        bullet.Rigid.AddForce(bullet.transform.forward * 35f, ForceMode.Impulse);
+        bullet.Rigid.AddForce(bullet.transform.forward * 50f, ForceMode.Impulse);
 
         yield return new WaitForSeconds(1f);
         _shotCoroutine = null;

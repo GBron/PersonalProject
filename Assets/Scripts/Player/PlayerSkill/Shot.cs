@@ -19,7 +19,7 @@ public class Shot : MonoBehaviour
     private void GunShot(bool value)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, _ignoreLayer) && PlayerManager.Instance._stats.CurBulletCount.Value > 0)
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, _ignoreLayer) && PlayerManager.Instance.Stats.CurBulletCount.Value > 0)
         {
             if (hit.collider.gameObject.layer == 9)
             {
@@ -30,7 +30,7 @@ public class Shot : MonoBehaviour
             else
             {
                 // 적이 아니라면 닿은 곳에 총알을 생성
-                PlayerManager.Instance._stats.CurBulletCount.Value--;
+                PlayerManager.Instance.Stats.CurBulletCount.Value--;
                 Bullet bullet = PlayerManager.Instance.GetBullet();
                 bullet.transform.SetParent(null);
                 bullet.transform.position = hit.point + hit.normal;

@@ -11,10 +11,11 @@ public class PlayerManager : Singleton<PlayerManager>
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Transform _spawnPoint;
 
-    public PlayerStats _stats;
-    public ObjectPool _hookPool;
-    public ObjectPool _bulletPool;
-    public PlayerMovement _player;
+    public PlayerStats Stats;
+    public ObjectPool HookPool;
+    public ObjectPool BulletPool;
+    public PlayerMovement Player;
+    public Coroutine HookCoroutine;
     
 
     public bool IsHooked { get; set; } = false;
@@ -27,7 +28,7 @@ public class PlayerManager : Singleton<PlayerManager>
         Init();
         SubscribedEvent();
         GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
-        _player = playerInstance.GetComponent<PlayerMovement>();
+        Player = playerInstance.GetComponent<PlayerMovement>();
     }
     private void OnDestroy()
     {
@@ -37,38 +38,38 @@ public class PlayerManager : Singleton<PlayerManager>
     private void Init()
     {
         SingletonInit();
-        _stats = new PlayerStats();
-        _stats.IsDied.Value = false;
-        _stats.MaxHp.Value = 100;
-        _stats.CurHp.Value = _stats.MaxHp.Value;
-        _stats.MoveSpeed = 5f;
-        _stats.HookSpeed = 45f;
-        _stats.HookRange = 30f;
-        _stats.JumpPower = 5f;
-        _stats.BulletCount = 3;
-        _stats.HookCooldown = 1f;
-        _stats.HookCount = 5;
-        _stats.CurHookCount.Value = _stats.HookCount;
-        _stats.CurBulletCount.Value = _stats.BulletCount;
-        _hookPool = new ObjectPool(transform, _hookPrefab, _stats.HookCount);
-        _bulletPool = new ObjectPool(transform, _bulletPrefab, _stats.BulletCount);
+        Stats = new PlayerStats();
+        Stats.IsDied.Value = false;
+        Stats.MaxHp.Value = 100;
+        Stats.CurHp.Value = Stats.MaxHp.Value;
+        Stats.MoveSpeed = 5f;
+        Stats.HookSpeed = 40f;
+        Stats.HookRange = 40f;
+        Stats.JumpPower = 5f;
+        Stats.BulletCount = 3;
+        Stats.HookCooldown = 1f;
+        Stats.HookCount = 5;
+        Stats.CurHookCount.Value = Stats.HookCount;
+        Stats.CurBulletCount.Value = Stats.BulletCount;
+        HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);
+        BulletPool = new ObjectPool(transform, _bulletPrefab, Stats.BulletCount);
     }
 
     public Hook GetHook()
     {
-        return _hookPool.PopPool() as Hook;
+        return HookPool.PopPool() as Hook;
     }
 
     public Bullet GetBullet()
     {
-        return _bulletPool.PopPool() as Bullet;
+        return BulletPool.PopPool() as Bullet;
     }
 
     public void TakeDamage(int damage)
     {
-        _stats.CurHp.Value -= damage;
+        Stats.CurHp.Value -= damage;
 
-        if (_stats.CurHp.Value <= 0)
+        if (Stats.CurHp.Value <= 0)
         {
             Dying();
         }
@@ -77,7 +78,16 @@ public class PlayerManager : Singleton<PlayerManager>
     private void Dying()
     {
         // TODO: 플레이어가 사망했을 때 카메라 이동 후 사망 애니메이션 진행
-        _stats.IsDied.Value = true;
+        Stats.IsDied.Value = true;
+    }
+
+    // 훅이 3초 이상 연결되어 있을 경우(플레이어가 턱에 끼임) 자동으로 IsHookMove를 false로
+    public IEnumerator CutHook()
+    {
+        yield return new WaitForSeconds(3f);
+        IsHookMove = false;
+        IsHooked = false;
+        HookCoroutine = null;
     }
 
     private void SubscribedEvent()

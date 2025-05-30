@@ -22,8 +22,8 @@ public class Hook : PooledObject
     {
         if (_isFlying)
         {
-            float distance = Vector3.Distance(Rigid.position, PlayerManager.Instance._player._center.position);
-            if (distance > PlayerManager.Instance._stats.HookRange)
+            float distance = Vector3.Distance(Rigid.position, PlayerManager.Instance.Player._center.position);
+            if (distance > PlayerManager.Instance.Stats.HookRange)
             {
                 _isFlying = false;
                 Rigid.velocity = Vector3.zero;
@@ -37,7 +37,6 @@ public class Hook : PooledObject
         if (collision.gameObject.layer == 7 || collision.gameObject.layer == 6)
         {
             _isFlying = false;
-            PlayerManager.Instance.IsHooked = false;
             Rigid.velocity = Vector3.zero;
             hookDest = Rigid.position;
             ReturnPool();

@@ -1,5 +1,4 @@
 using Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -63,22 +62,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void Init()
     {
-        PlayerManager.Instance._stats.MoveSpeed = _moveSpeed;
-        PlayerManager.Instance._stats.JumpPower = _jumpPower;
+        PlayerManager.Instance.Stats.MoveSpeed = _moveSpeed;
+        PlayerManager.Instance.Stats.JumpPower = _jumpPower;
         _rigid = GetComponent<Rigidbody>();
     }
 
     private void PlayerMove()
     {
         Vector3 velocity = _rigid.velocity;
-        velocity.x = transform.TransformDirection(InputManager.Instance.MoveDirection).x * PlayerManager.Instance._stats.MoveSpeed;
-        velocity.z = transform.TransformDirection(InputManager.Instance.MoveDirection).z * PlayerManager.Instance._stats.MoveSpeed;
+        velocity.x = transform.TransformDirection(InputManager.Instance.MoveDirection).x * PlayerManager.Instance.Stats.MoveSpeed;
+        velocity.z = transform.TransformDirection(InputManager.Instance.MoveDirection).z * PlayerManager.Instance.Stats.MoveSpeed;
 
-        if(!_isGrounded)
+        if (!_isGrounded)
         {
             velocity.y = _rigid.velocity.y;
         }
-        
+
         _rigid.velocity = velocity;
     }
 
@@ -86,10 +85,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (InputManager.Instance.IsJump && _isGrounded)
         {
-            _rigid.AddForce(Vector3.up * PlayerManager.Instance._stats.JumpPower, ForceMode.Impulse);
+            _rigid.AddForce(Vector3.up * PlayerManager.Instance.Stats.JumpPower, ForceMode.Impulse);
         }
     }
- 
+
     private void PlayerAim()
     {
         float mouseX = InputManager.Instance.MousePosition.x * GameManager.Instance.MouseSensitivity;
@@ -107,11 +106,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetDestPos(Vector3 destPos)
     {
-        _destPos = destPos; 
+        _destPos = destPos;
     }
 
     private void HookMove()
     {
+        if (PlayerManager.Instance.HookCoroutine == null)
+            PlayerManager.Instance.HookCoroutine = StartCoroutine(PlayerManager.Instance.CutHook());
+
         Vector3 moveDir = (_destPos - _center.position).normalized;
         float distance = Vector3.Distance(_center.position, _destPos);
 
@@ -119,12 +121,14 @@ public class PlayerMovement : MonoBehaviour
         if (distance > 1.45f)
         {
             PlayerManager.Instance.IsHookMove = true;
-            _rigid.velocity = moveDir * 20;
+            _rigid.velocity = moveDir * PlayerManager.Instance.Stats.HookSpeed;
         }
         else
         {
             PlayerManager.Instance.IsHookMove = false;
             _rigid.velocity = Vector3.zero;
+            StopCoroutine(PlayerManager.Instance.HookCoroutine);
+            PlayerManager.Instance.HookCoroutine = null;
         }
     }
 }

@@ -11,9 +11,9 @@ public class TestUI : MonoBehaviour
 
     private void Start()
     {
-        PlayerManager.Instance._stats.CurHookCount.Subscribe(SetHookUI);
-        PlayerManager.Instance._stats.CurBulletCount.Subscribe(SetBulletUI);
-        PlayerManager.Instance._stats.CurHp.Subscribe(SetHpUI);
+        PlayerManager.Instance.Stats.CurHookCount.Subscribe(SetHookUI);
+        PlayerManager.Instance.Stats.CurBulletCount.Subscribe(SetBulletUI);
+        PlayerManager.Instance.Stats.CurHp.Subscribe(SetHpUI);
         SetHookUI(0);
         SetBulletUI(0);
         SetHpUI(0);
@@ -21,14 +21,14 @@ public class TestUI : MonoBehaviour
 
     private void SetHookUI(int value)
     {
-        _hookCount.text = PlayerManager.Instance._stats.CurHookCount.Value.ToString();
+        _hookCount.text = PlayerManager.Instance.Stats.CurHookCount.Value.ToString();
     }
     private void SetBulletUI(int value)
     {
-        _bulletCount.text = PlayerManager.Instance._stats.CurBulletCount.Value.ToString();
+        _bulletCount.text = PlayerManager.Instance.Stats.CurBulletCount.Value.ToString();
     }
     private void SetHpUI(int value)
     {
-        _hpCount.text = PlayerManager.Instance._stats.CurHp.Value.ToString();
+        _hpCount.text = PlayerManager.Instance.Stats.CurHp.Value.ToString();
     }
 }
