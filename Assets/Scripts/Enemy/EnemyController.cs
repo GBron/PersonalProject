@@ -74,6 +74,7 @@ public class EnemyController : MonoBehaviour
         // 플레이어 탐색
         if (Physics.OverlapSphereNonAlloc(_head.transform.position, _detectRange, _cols, _playerLayer) > 0)
         {
+            Debug.Log($"범위 내에 플레이어가 있음");
             // 플레이어가 탐지 될 시 벽이 있는지 Raycast로 확인
             float angle = Vector3.Angle(_head.transform.forward, _cols[0].transform.position);
 
@@ -82,11 +83,13 @@ public class EnemyController : MonoBehaviour
                 // 플레이어가 탐지되면 _isPlayerDetected를 true로 설정
                 if (hit.transform.gameObject.layer == 3)
                 {
+                    Debug.Log($"플레이어 발견");
                     _isPlayerDetected = true;
                 }
                 // 플레이어가 탐지되지 않으면 _isPlayerDetected를 false로 설정
                 else
                 {
+                    Debug.Log($"벽에 막힘");
                     _isPlayerDetected = false;
                 }
             }
@@ -100,19 +103,23 @@ public class EnemyController : MonoBehaviour
         _head.transform.LookAt(PlayerManager.Instance.Player._center);
 
         // 플레이어에게 계속 레이캐스트를 쏘며 플레이어가 시야 내에 있는지 확인
-        if (Physics.Raycast(_head.transform.position, (_cols[0].transform.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange, _ignoreLayer))
+        if (Physics.Raycast(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange, _ignoreLayer))
         {
+            Debug.DrawRay(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized * _detectRange, Color.blue);
             // 플레이어가 시야 안이라면 사격
             if (hit.transform.gameObject.layer == 3)
             {
                 if (_canShot)
                 {
+                    Debug.Log($"사격!");
                     _shotCoroutine = StartCoroutine(Shot());
                 }
             }
             // 플레이어가 시야 밖이라면 탐지가 안되는 것이므로 탐색모드로 변경
             else
             {
+                Debug.Log($"플레이어가 아닌 { hit.transform.name}에 막힘");
+                Debug.Log($"플레이어 놓침. 탐색모드로 돌아감");
                 _isPlayerDetected = false;
                 Vector3 euler = _head.transform.eulerAngles;
                 euler.x = 0;
