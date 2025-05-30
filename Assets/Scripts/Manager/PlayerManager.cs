@@ -9,11 +9,11 @@ public class PlayerManager : Singleton<PlayerManager>
     [SerializeField] private PooledObject _hookPrefab;
     [SerializeField] private PooledObject _bulletPrefab;
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private Transform _spawnPoint;
 
     public PlayerStats _stats;
     public ObjectPool _hookPool;
     public ObjectPool _bulletPool;
-    private Vector3 _spawnPoint;
     public PlayerMovement _player;
     public ObseravableProperty<int> CurHookCount = new ObseravableProperty<int>();
     public ObseravableProperty<int> CurBulletCount = new ObseravableProperty<int>();
@@ -27,7 +27,7 @@ public class PlayerManager : Singleton<PlayerManager>
     {
         Init();
         SubscribedEvent();
-        GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint, Quaternion.identity);
+        GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
         _player = playerInstance.GetComponent<PlayerMovement>();
     }
 
@@ -40,19 +40,19 @@ public class PlayerManager : Singleton<PlayerManager>
     {
         SingletonInit();
         _stats = new PlayerStats();
-        _hookPool = new ObjectPool(transform, _hookPrefab, 3);
-        _bulletPool = new ObjectPool(transform, _bulletPrefab, 3);
         _stats.MaxHp.Value = 100;
         _stats.CurHp.Value = _stats.MaxHp.Value;
         _stats.MoveSpeed = 5f;
-        _stats.HookSpeed = 20f;
+        _stats.HookSpeed = 45f;
         _stats.HookRange = 30f;
         _stats.JumpPower = 5f;
         _stats.BulletCount = 3;
-        _stats.HookCooldown = 5f;
-        _stats.HookCount = 3;
+        _stats.HookCooldown = 1f;
+        _stats.HookCount = 5;
         CurHookCount.Value = _stats.HookCount;
         CurBulletCount.Value = _stats.BulletCount;
+        _hookPool = new ObjectPool(transform, _hookPrefab, _stats.HookCount);
+        _bulletPool = new ObjectPool(transform, _bulletPrefab, _stats.BulletCount);
     }
 
     public Hook GetHook()

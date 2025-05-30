@@ -29,6 +29,7 @@ namespace Base
             if (_stack.Count == 0) CreatePoolObject();
 
             PooledObject pooledObject = _stack.Pop();
+            pooledObject.transform.parent = null;
             pooledObject.gameObject.SetActive(true);
             return pooledObject;
         }

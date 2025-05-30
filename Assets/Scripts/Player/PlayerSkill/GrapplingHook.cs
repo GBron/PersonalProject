@@ -39,11 +39,8 @@ public class GrapplingHook : MonoBehaviour
         if (PlayerManager.Instance.CurHookCount.Value == 0) return;
         // 1-1. 카메라의 정면으로 발사 = _muzzle은 카메라의 중앙 포지션임
         Hook hook = PlayerManager.Instance.GetHook();
-        hook.transform.SetParent(null);
-        hook.transform.position = _muzzle.position;
-        hook.transform.rotation = _muzzle.rotation;
+        hook.SetHookShot(_muzzle.position, _muzzle.rotation);
         hook.Rigid.velocity = _muzzle.forward * PlayerManager.Instance._stats.HookSpeed;
-        hook.SetHookShot();
         // 1-2. 훅을 발사하고, 훅이 벽에 닿으면 플레이어를 끌어당김(hook, PlayerMovement에서 구현)
         // 1-3. 훅이 벽에 닿지 못하면 풀로 돌아감(hook에서 구현)
         // 1-4. 훅이 발사되었으니 훅 충전량을 차감하고 쿨타임을 돌림

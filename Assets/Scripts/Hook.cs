@@ -7,7 +7,7 @@ public class Hook : PooledObject
     public Rigidbody Rigid;
     public Vector3 hookDest;
     private bool _isFlying = false;
-    
+
     private void Awake()
     {
         Rigid = GetComponent<Rigidbody>();
@@ -23,13 +23,12 @@ public class Hook : PooledObject
         if (_isFlying)
         {
             float distance = Vector3.Distance(Rigid.position, PlayerManager.Instance._player._center.position);
-
-            if (distance > 30f)
+            if (distance > PlayerManager.Instance._stats.HookRange)
             {
-                ReturnPool();
                 _isFlying = false;
+                Rigid.velocity = Vector3.zero;
+                ReturnPool();
             }
-
         }
     }
 
@@ -47,8 +46,10 @@ public class Hook : PooledObject
         }
     }
 
-    public void SetHookShot()
+    public void SetHookShot(Vector3 startPos, Quaternion startRot)
     {
+        Rigid.position = startPos;
+        Rigid.rotation = startRot;
         _isFlying = true;
     }
 }

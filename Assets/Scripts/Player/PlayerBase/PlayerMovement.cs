@@ -89,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             _rigid.AddForce(Vector3.up * PlayerManager.Instance._stats.JumpPower, ForceMode.Impulse);
         }
     }
-
+ 
     private void PlayerAim()
     {
         float mouseX = InputManager.Instance.MousePosition.x * GameManager.Instance.MouseSensitivity;
