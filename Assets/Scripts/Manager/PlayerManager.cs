@@ -81,10 +81,10 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.IsDied.Value = true;
     }
 
-    // 훅이 3초 이상 연결되어 있을 경우(플레이어가 턱에 끼임) 자동으로 IsHookMove를 false로
+    // 훅이 2초 이상 연결되어 있을 경우(플레이어가 턱에 끼임) 자동으로 IsHookMove를 false로
     public IEnumerator CutHook()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         IsHookMove = false;
         IsHooked = false;
         HookCoroutine = null;
