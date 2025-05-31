@@ -11,12 +11,14 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rigid;
     private bool _isGrounded;
     private Vector3 _destPos;
+    private LayerMask _ignoreLayer = ~(1 << 3);
 
 
     private void Start()
     {
         Init();
         PlayerManager.Instance.HookedEvent.AddListener(SetDestPos);
+        InputManager.Instance.SpacePress.Subscribe(PlayerJump);
     }
 
     private void FixedUpdate()
@@ -36,28 +38,12 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         PlayerAim();
-        PlayerJump();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == 6)
-        {
-            _isGrounded = true;
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.layer == 6)
-        {
-            _isGrounded = false;
-        }
     }
 
     private void OnDisable()
     {
         PlayerManager.Instance.HookedEvent.RemoveListener(SetDestPos);
+        InputManager.Instance.SpacePress.UnsubscribeAll();
     }
 
     private void Init()
@@ -81,11 +67,24 @@ public class PlayerMovement : MonoBehaviour
         _rigid.velocity = velocity;
     }
 
-    private void PlayerJump()
+    private void PlayerJump(bool value)
     {
-        if (InputManager.Instance.IsJump && _isGrounded)
+        // 바닥으로 레이캐스트를 쏘고 법선 백터랑 비교해 각도로 점프가 가능한지 판별
+        Ray ray = new Ray(PlayerManager.Instance.Player._center.position, Vector3.down);
+
+        if(Physics.Raycast(ray, out RaycastHit hit, 1.2f, _ignoreLayer))
         {
-            _rigid.AddForce(Vector3.up * PlayerManager.Instance.Stats.JumpPower, ForceMode.Impulse);
+            float angle = Vector3.Angle(Vector3.up, hit.normal);
+
+            if(angle < 30f)
+            {
+                _rigid.AddForce(transform.up * _jumpPower, ForceMode.Impulse);
+                _isGrounded = true;
+            }
+            else
+            {
+                _isGrounded = false;
+            }
         }
     }
 

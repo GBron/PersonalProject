@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
 
     private int _hp = 1;
     private float _detectAngle = 45f;
-    private float _detectRange = 75f;
+    private float _detectRange = 50f;
     private LayerMask _playerLayer = 1 << 3;
     private LayerMask _ignoreLayer = ~((1 << 8) | (1 << 9) | (1 << 11));
     private Collider[] _cols = new Collider[10];
@@ -66,6 +66,7 @@ public class EnemyController : MonoBehaviour
 
     private void Detecting()
     {
+        Debug.Log("탐색모드");
         _light.gameObject.SetActive(true);
 
         // 머리가 돌아가며 주변 탐색
@@ -78,10 +79,12 @@ public class EnemyController : MonoBehaviour
             // 플레이어가 탐지 될 시 벽이 있는지 Raycast로 확인
             float angle = Vector3.Angle(_head.transform.forward, _cols[0].transform.position);
 
-            if (Physics.Raycast(_head.transform.position, (_cols[0].transform.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange) && angle <= _detectAngle)
+            Debug.DrawRay(_head.transform.position, _head.transform.forward * _detectRange, Color.green);
+
+            if (Physics.Raycast(_head.transform.position, (_cols[0].transform.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange))
             {
                 // 플레이어가 탐지되면 _isPlayerDetected를 true로 설정
-                if (hit.transform.gameObject.layer == 3)
+                if (hit.transform.gameObject.layer == 3 && angle <= _detectAngle)
                 {
                     Debug.Log($"플레이어 발견");
                     _isPlayerDetected = true;
@@ -98,6 +101,7 @@ public class EnemyController : MonoBehaviour
 
     private void Trace()
     {
+        Debug.Log("추적모드");
         _light.gameObject.SetActive(false);
         // 플레이어를 바라봄
         _head.transform.LookAt(PlayerManager.Instance.Player._center);
@@ -105,9 +109,12 @@ public class EnemyController : MonoBehaviour
         // 플레이어에게 계속 레이캐스트를 쏘며 플레이어가 시야 내에 있는지 확인
         if (Physics.Raycast(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange, _ignoreLayer))
         {
-            Debug.DrawRay(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized * _detectRange, Color.blue);
+            Debug.DrawRay(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized * _detectRange, Color.yellow);
+
+            float distance = Vector3.Distance(PlayerManager.Instance.Player._center.position, _head.transform.position);
+
             // 플레이어가 시야 안이라면 사격
-            if (hit.transform.gameObject.layer == 3)
+            if (hit.transform.gameObject.layer == 3 && distance < _detectRange)
             {
                 if (_canShot)
                 {
@@ -118,7 +125,6 @@ public class EnemyController : MonoBehaviour
             // 플레이어가 시야 밖이라면 탐지가 안되는 것이므로 탐색모드로 변경
             else
             {
-                Debug.Log($"플레이어가 아닌 { hit.transform.name}에 막힘");
                 Debug.Log($"플레이어 놓침. 탐색모드로 돌아감");
                 _isPlayerDetected = false;
                 Vector3 euler = _head.transform.eulerAngles;

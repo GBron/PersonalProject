@@ -5,6 +5,7 @@ public class InputManager : Singleton<InputManager>
 {
     public ObseravableProperty<bool> MouseLClick = new();
     public ObseravableProperty<bool> MouseRClick = new();
+    public ObseravableProperty<bool> SpacePress = new();
 
     private Vector3 _moveDirection;
     public Vector3 MoveDirection
@@ -59,6 +60,7 @@ public class InputManager : Singleton<InputManager>
             // 훅에 걸려있을 때 점프시 훅 제거
             if (!PlayerManager.Instance.IsHookMove)
                 PlayerManager.Instance.IsHooked = false;
+            SpacePress.Value = !SpacePress.Value;
             IsJump = true;
         }
         else
