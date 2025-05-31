@@ -11,10 +11,10 @@ public class EnemyController : MonoBehaviour
 
     private int _hp = 1;
     private float _detectAngle = 45f;
-    private float _detectRange = 50f;
+    private float _detectRange = 75f;
     private LayerMask _playerLayer = 1 << 3;
     private LayerMask _ignoreLayer = ~((1 << 8) | (1 << 9) | (1 << 11));
-    private Collider[] _cols = new Collider[10];
+    // private Collider[] _cols = new Collider[10];
     private bool _isPlayerDetected = false;
     private bool _canShot => _shotCoroutine == null;
     private Coroutine _shotCoroutine;
@@ -70,18 +70,23 @@ public class EnemyController : MonoBehaviour
         _light.gameObject.SetActive(true);
 
         // 머리가 돌아가며 주변 탐색
-        _head.transform.Rotate(Vector3.up * 45f * Time.deltaTime);
+        _head.transform.Rotate(Vector3.up * 60f * Time.deltaTime);
 
-        // 플레이어 탐색
-        if (Physics.OverlapSphereNonAlloc(_head.transform.position, _detectRange, _cols, _playerLayer) > 0)
+        // 플레이어 탐색 overlapsphere
+        // if (Physics.OverlapSphereNonAlloc(_head.transform.position, _detectRange, _cols, _playerLayer) > 0)
+
+        // 플레이어 탐색 raycast
+        if (Physics.Raycast(_head.transform.position, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized, out RaycastHit hit, 200f, _ignoreLayer))
         {
             Debug.Log($"범위 내에 플레이어가 있음");
-            // 플레이어가 탐지 될 시 벽이 있는지 Raycast로 확인
-            float angle = Vector3.Angle(_head.transform.forward, _cols[0].transform.position);
+            
+            float angle = Vector3.Angle(_head.transform.forward, (PlayerManager.Instance.Player._center.position - _head.transform.position).normalized);
+            float distance = Vector3.Distance(PlayerManager.Instance.Player._center.position, _head.transform.position);
 
             Debug.DrawRay(_head.transform.position, _head.transform.forward * _detectRange, Color.green);
 
-            if (Physics.Raycast(_head.transform.position, (_cols[0].transform.position - _head.transform.position).normalized, out RaycastHit hit, _detectRange))
+            // 플레이어가 탐지 될 시 벽이 있는지 Raycast로 확인
+            if (distance <= _detectRange)
             {
                 // 플레이어가 탐지되면 _isPlayerDetected를 true로 설정
                 if (hit.transform.gameObject.layer == 3 && angle <= _detectAngle)
