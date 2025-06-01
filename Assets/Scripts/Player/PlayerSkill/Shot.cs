@@ -4,7 +4,7 @@ public class Shot : MonoBehaviour
 {
     [SerializeField] private GameObject _bulletPrefab;
 
-    private LayerMask _ignoreLayer = ~((1 << 3) | (1 << 8) | (1 << 10));
+    private LayerMask _ignoreLayer = ~((1 << 3) | (1 << 8) | (1 << 10) | (1 << 11));
 
     private void Start()
     {
@@ -19,7 +19,7 @@ public class Shot : MonoBehaviour
     private void GunShot(bool value)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, _ignoreLayer) && PlayerManager.Instance.Stats.CurBulletCount.Value > 0)
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, _ignoreLayer) && PlayerManager.Instance.Stats.CurBulletCount.Value > 0)
         {
             if (hit.collider.gameObject.layer == 9)
             {
