@@ -19,7 +19,7 @@ public class TestUI : MonoBehaviour
         SetHpUI(0);
     }
 
-    private void SetHookUI(int value)
+    private void SetHookUI(float value)
     {
         _hookCount.text = PlayerManager.Instance.Stats.CurHookCount.Value.ToString();
     }

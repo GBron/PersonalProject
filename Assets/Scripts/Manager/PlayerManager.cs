@@ -47,8 +47,7 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.HookRange = 40f;
         Stats.JumpPower = 5f;
         Stats.BulletCount = 3;
-        Stats.HookCooldown = 1f;
-        Stats.HookCount = 5;
+        Stats.HookCount = 3;
         Stats.CurHookCount.Value = Stats.HookCount;
         Stats.CurBulletCount.Value = Stats.BulletCount;
         HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);

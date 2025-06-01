@@ -1,9 +1,4 @@
-using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GrapplingHook : MonoBehaviour
 {
@@ -27,6 +22,10 @@ public class GrapplingHook : MonoBehaviour
         InputManager.Instance.MouseRClick.Unsubscribe(HandleHook);
     }
 
+    private void Update()
+    {
+        ChargeHook();
+    }
 
     private void HandleHook(bool value)
     {
@@ -36,7 +35,7 @@ public class GrapplingHook : MonoBehaviour
     // 1. 훅 발사
     private void HookShoot()
     {
-        if (PlayerManager.Instance.Stats.CurHookCount.Value == 0) return;
+        if (PlayerManager.Instance.Stats.CurHookCount.Value < 1) return;
         // 1-1. 카메라의 정면으로 발사 = _muzzle은 카메라의 중앙 포지션임
         Hook hook = PlayerManager.Instance.GetHook();
         hook.SetHookShot(_muzzle.position, _muzzle.rotation);
@@ -45,20 +44,30 @@ public class GrapplingHook : MonoBehaviour
         // 1-3. 훅이 벽에 닿지 못하면 풀로 돌아감(hook에서 구현)
         // 1-4. 훅이 발사되었으니 훅 충전량을 차감하고 쿨타임을 돌림
         PlayerManager.Instance.Stats.CurHookCount.Value--;
-        // 장전은 최초 발사시에만.
-        if(_hookCoroutine == null)
-        {
-            _hookCoroutine = StartCoroutine(HookCoolDown());
-        }
+
+        // if(_hookCoroutine == null)
+        // {
+        //     _hookCoroutine = StartCoroutine(HookCoolDown());
+        // }
     }
 
-    IEnumerator HookCoolDown()
+    // IEnumerator HookCoolDown()
+    // {
+    //     while (PlayerManager.Instance.Stats.CurHookCount.Value < PlayerManager.Instance.Stats.HookCount)
+    //     {
+    //         yield return new WaitForSeconds(PlayerManager.Instance.Stats.HookCooldown);
+    //         PlayerManager.Instance.Stats.CurHookCount.Value++;
+    //     }
+    //     _hookCoroutine = null;
+    // }
+
+    private void ChargeHook()
     {
-        while (PlayerManager.Instance.Stats.CurHookCount.Value < PlayerManager.Instance.Stats.HookCount)
+        // 훅 재충전
+        if (PlayerManager.Instance.Stats.CurHookCount.Value <= PlayerManager.Instance.Stats.HookCount)
         {
-            yield return new WaitForSeconds(PlayerManager.Instance.Stats.HookCooldown);
-            PlayerManager.Instance.Stats.CurHookCount.Value++;
+            // 실질적인 쿨타임
+            PlayerManager.Instance.Stats.CurHookCount.Value += 1/3f * Time.deltaTime;
         }
-        _hookCoroutine = null;
     }
 }
