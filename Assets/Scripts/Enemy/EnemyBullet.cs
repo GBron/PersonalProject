@@ -14,7 +14,7 @@ public class EnemyBullet : PooledObject
 
         if (collision.gameObject.layer == 3)
         {
-            PlayerManager.Instance.TakeDamage(10);
+            PlayerManager.Instance.TakeDamage(1);
         }
     }
 }

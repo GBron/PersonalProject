@@ -40,7 +40,7 @@ public class PlayerManager : Singleton<PlayerManager>
         SingletonInit();
         Stats = new PlayerStats();
         Stats.IsDied.Value = false;
-        Stats.MaxHp.Value = 100;
+        Stats.MaxHp.Value = 1;
         Stats.CurHp.Value = Stats.MaxHp.Value;
         Stats.MoveSpeed = 5f;
         Stats.HookSpeed = 40f;
@@ -48,8 +48,10 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.JumpPower = 5f;
         Stats.BulletCount = 3;
         Stats.HookCount = 3;
+        Stats.BarrierCount = 3;
         Stats.CurHookCount.Value = Stats.HookCount;
         Stats.CurBulletCount.Value = Stats.BulletCount;
+        Stats.CurBarrierCount.Value = Stats.BarrierCount;
         HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);
         BulletPool = new ObjectPool(transform, _bulletPrefab, Stats.BulletCount);
     }
@@ -66,6 +68,11 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public void TakeDamage(int damage)
     {
+        if (Stats.CurBarrierCount.Value > 0)
+        {
+            Stats.CurBarrierCount.Value -= damage;
+        }
+
         Stats.CurHp.Value -= damage;
 
         if (Stats.CurHp.Value <= 0)
