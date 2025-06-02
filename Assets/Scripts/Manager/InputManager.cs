@@ -6,6 +6,7 @@ public class InputManager : Singleton<InputManager>
     public ObseravableProperty<bool> MouseLClick = new();
     public ObseravableProperty<bool> MouseRClick = new();
     public ObseravableProperty<bool> SpacePress = new();
+    public ObseravableProperty<bool> ESCPress = new();
 
     private Vector3 _moveDirection;
     public Vector3 MoveDirection
@@ -31,10 +32,10 @@ public class InputManager : Singleton<InputManager>
     private void Update()
     {
         MouseInput();
-        MoveInput();
+        KeyboardInput();
     }
 
-    private void MoveInput()
+    private void KeyboardInput()
     {
         // 각 입력을 받아 이동방향에 저장
         _moveDirection = Vector3.zero;
@@ -55,6 +56,9 @@ public class InputManager : Singleton<InputManager>
         {
             _moveDirection += Vector3.right;
         }
+
+        _moveDirection.Normalize();
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // 훅에 걸려있을 때 점프시 훅 제거
@@ -68,7 +72,10 @@ public class InputManager : Singleton<InputManager>
             IsJump = false;
         }
 
-        _moveDirection.Normalize();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ESCPress.Value = !ESCPress.Value;
+        }
     }
 
     private void MouseInput()

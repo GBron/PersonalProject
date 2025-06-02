@@ -16,7 +16,6 @@ public class PlayerManager : Singleton<PlayerManager>
     public ObjectPool BulletPool;
     public PlayerMovement Player;
     public Coroutine HookCoroutine;
-    
 
     public bool IsHooked { get; set; } = false;
     public bool IsHookMove { get; set; } = false;
