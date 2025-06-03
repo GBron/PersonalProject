@@ -7,6 +7,7 @@ public class InputManager : Singleton<InputManager>
     public ObseravableProperty<bool> MouseRClick = new();
     public ObseravableProperty<bool> SpacePress = new();
     public ObseravableProperty<bool> ESCPress = new();
+    public ObseravableProperty<bool> FPress = new();
 
     private Vector3 _moveDirection;
     public Vector3 MoveDirection
@@ -37,11 +38,23 @@ public class InputManager : Singleton<InputManager>
 
     private void KeyboardInput()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ESCPress.Value = !ESCPress.Value;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FPress.Value = !FPress.Value;
+        }
+
+        if (GameManager.Instance.IsGamePaused) return;
+
         // 각 입력을 받아 이동방향에 저장
         _moveDirection = Vector3.zero;
 
         if (Input.GetKey(KeyCode.W))
-        { 
+        {
             _moveDirection += Vector3.forward;
         }
         if (Input.GetKey(KeyCode.S))
@@ -72,26 +85,23 @@ public class InputManager : Singleton<InputManager>
             IsJump = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ESCPress.Value = !ESCPress.Value;
-        }
+
     }
 
     private void MouseInput()
     {
+        if (GameManager.Instance.IsGamePaused) return;
+
         _mousePosition.x = Input.GetAxis("Mouse X");
         _mousePosition.y = Input.GetAxis("Mouse Y");
 
         if (Input.GetMouseButtonDown(0))
         {
             MouseLClick.Value = !MouseLClick.Value;
-            Debug.Log("Mouse Left Clicked");
         }
         if (Input.GetMouseButtonDown(1))
         {
             MouseRClick.Value = !MouseRClick.Value;
-            Debug.Log("Mouse Right Clicked");
         }
     }
 

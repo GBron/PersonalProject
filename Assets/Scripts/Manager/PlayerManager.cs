@@ -9,7 +9,7 @@ public class PlayerManager : Singleton<PlayerManager>
     [SerializeField] private PooledObject _hookPrefab;
     [SerializeField] private PooledObject _bulletPrefab;
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private Transform _spawnPoint;
+    private Vector3 _spawnPoint;
 
     public PlayerStats Stats;
     public ObjectPool HookPool;
@@ -26,8 +26,6 @@ public class PlayerManager : Singleton<PlayerManager>
     {
         Init();
         SubscribedEvent();
-        GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
-        Player = playerInstance.GetComponent<PlayerMovement>();
     }
     private void OnDestroy()
     {
@@ -37,6 +35,7 @@ public class PlayerManager : Singleton<PlayerManager>
     private void Init()
     {
         SingletonInit();
+        _spawnPoint = new Vector3(3, 0, 3);
         Stats = new PlayerStats();
         Stats.IsDied.Value = false;
         Stats.MaxHp.Value = 1;
@@ -53,6 +52,12 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.CurBarrierCount.Value = Stats.BarrierCount;
         HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);
         BulletPool = new ObjectPool(transform, _bulletPrefab, Stats.BulletCount);
+    }
+
+    public void InstantiatePlayer()
+    {
+        GameObject playerInstance = Instantiate(_playerPrefab, _spawnPoint, Quaternion.identity);
+        Player = playerInstance.GetComponent<PlayerMovement>();
     }
 
     public Hook GetHook()

@@ -90,6 +90,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void PlayerAim()
     {
+        if (GameManager.Instance.IsGamePaused) return;
+
         float mouseX = InputManager.Instance.MousePosition.x * GameManager.Instance.MouseSensitivity;
         float mouseY = InputManager.Instance.MousePosition.y * GameManager.Instance.MouseSensitivity;
 

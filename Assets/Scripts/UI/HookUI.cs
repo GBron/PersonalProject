@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class HookUI : MonoBehaviour
     [SerializeField] private Image _bullet1;
     [SerializeField] private Image _bullet2;
     [SerializeField] private Image _bullet3;
+    [SerializeField] private TMP_Text _minute;
+    [SerializeField] private TMP_Text _second;
 
     private void Start()
     {
@@ -14,6 +17,12 @@ public class HookUI : MonoBehaviour
         PlayerManager.Instance.Stats.CurBulletCount.Subscribe(SetbulletUI);
         SetHookGauge(0);
         SetbulletUI(0);
+    }
+
+    private void Update()
+    {
+        _minute.text = ((int)(GameManager.Instance.Timer / 60)).ToString();
+        _second.text = (GameManager.Instance.Timer % 60f).ToString("F2");
     }
 
     private void OnDisable()

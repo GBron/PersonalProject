@@ -25,11 +25,19 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         Init();
+        GameManager.Instance.EnemyCount++;
+        Debug.Log($"적 숫자{GameManager.Instance.EnemyCount}");
     }
 
     private void Update()
     {
         HandleEnemy();
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.EnemyCount--;
+        Debug.Log($"적 숫자{GameManager.Instance.EnemyCount}");
     }
 
     private void Init()
