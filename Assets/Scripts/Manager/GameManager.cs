@@ -81,7 +81,9 @@ public class GameManager : Singleton<GameManager>
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 IsTimeStop = false;
+                IsGamePaused = false;
                 CanClear = false;
+                Timer = 0;
                 _title.gameObject.SetActive(false);
                 _hud.gameObject.SetActive(true);
                 _barrier.gameObject.SetActive(true);
@@ -164,6 +166,7 @@ public class GameManager : Singleton<GameManager>
 
         _quitConfirm.SetActive(false);
         _menu.gameObject.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     public void QuitGame()
