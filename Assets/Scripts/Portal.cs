@@ -7,7 +7,6 @@ public class Portal : MonoBehaviour
     [SerializeField] Material _material;
     [SerializeField] ParticleSystem _particle;
 
-    private bool _canEnter;
 
     private void Update()
     {
@@ -17,7 +16,6 @@ public class Portal : MonoBehaviour
             _material.SetColor("_EmissionColor", Color.red);
             var ps = _particle.main;
             ps.startColor = Color.red;
-            _canEnter = false;
         }
         else 
         {
@@ -25,13 +23,12 @@ public class Portal : MonoBehaviour
             _material.SetColor("_EmissionColor", Color.green);
             var ps = _particle.main;
             ps.startColor = Color.green;
-            _canEnter = true;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == 3 && _canEnter)
+        if(other.gameObject.layer == 3 && GameManager.Instance.CanClear)
         {
             GameManager.Instance.ChangeScene(2);
             GameManager.Instance.IsTimeStop = true;

@@ -29,7 +29,7 @@ public class GameManager : Singleton<GameManager>
     public UnityEvent OnPlayerInit { get; set; }
     public int EnemyCount { get; set; }
     public bool IsTimeStop { get; set; }
-    private bool _canClear;
+    public bool CanClear { get; set; }
 
 
 
@@ -44,7 +44,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        InputManager.Instance.FPress.Subscribe(OnMenuUI);
+        InputManager.Instance.ESCPress.Subscribe(OnMenuUI);
     }
 
     private void Update()
@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDisable()
     {
-        InputManager.Instance.FPress.Unsubscribe(OnMenuUI);
+        InputManager.Instance.ESCPress.Unsubscribe(OnMenuUI);
     }
 
     public void ChangeScene(int value)
@@ -81,7 +81,7 @@ public class GameManager : Singleton<GameManager>
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 IsTimeStop = false;
-                _canClear = false;
+                CanClear = false;
                 _title.gameObject.SetActive(false);
                 _hud.gameObject.SetActive(true);
                 _barrier.gameObject.SetActive(true);
@@ -103,7 +103,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (CurScene == 1 && EnemyCount < 1)
         {
-            _canClear = true;
+            CanClear = true;
         }
     }
 
