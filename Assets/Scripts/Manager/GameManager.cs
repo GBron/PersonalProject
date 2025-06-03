@@ -31,7 +31,7 @@ public class GameManager : Singleton<GameManager>
     public bool IsTimeStop { get; set; }
     public bool CanClear { get; set; }
 
-
+    
 
     private void Awake()
     {
@@ -45,6 +45,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         InputManager.Instance.ESCPress.Subscribe(OnMenuUI);
+        InputManager.Instance.FPress.Subscribe(ClearCheat);
     }
 
     private void Update()
@@ -56,6 +57,12 @@ public class GameManager : Singleton<GameManager>
     private void OnDisable()
     {
         InputManager.Instance.ESCPress.Unsubscribe(OnMenuUI);
+        InputManager.Instance.FPress.Unsubscribe(ClearCheat);
+    }
+
+    public void ClearCheat(bool value)
+    {
+        EnemyCount = 0;
     }
 
     public void ChangeScene(int value)
@@ -64,6 +71,7 @@ public class GameManager : Singleton<GameManager>
 
         AsyncOperation async = SceneManager.LoadSceneAsync(CurScene);
         async.completed += SceneInit;
+        EnemyCount = 0;
     }
 
     private void SceneInit(AsyncOperation async)
@@ -80,6 +88,9 @@ public class GameManager : Singleton<GameManager>
             case 1:
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                PlayerManager.Instance.PlayerStatReset();
+                PlayerManager.Instance.IsHookMove = false;
+                PlayerManager.Instance.IsHooked = false;
                 IsTimeStop = false;
                 IsGamePaused = false;
                 CanClear = false;

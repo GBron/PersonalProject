@@ -43,11 +43,6 @@ public class InputManager : Singleton<InputManager>
             ESCPress.Value = !ESCPress.Value;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            FPress.Value = !FPress.Value;
-        }
-
         if (GameManager.Instance.IsGamePaused) return;
 
         // 각 입력을 받아 이동방향에 저장
@@ -85,7 +80,10 @@ public class InputManager : Singleton<InputManager>
             IsJump = false;
         }
 
-
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FPress.Value = !FPress.Value;
+        }
     }
 
     private void MouseInput()

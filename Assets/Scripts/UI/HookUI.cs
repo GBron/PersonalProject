@@ -11,7 +11,7 @@ public class HookUI : MonoBehaviour
     [SerializeField] private TMP_Text _minute;
     [SerializeField] private TMP_Text _second;
 
-    private void Start()
+    private void OnEnable()
     {
         PlayerManager.Instance.Stats.CurHookCount.Subscribe(SetHookGauge);
         PlayerManager.Instance.Stats.CurBulletCount.Subscribe(SetbulletUI);

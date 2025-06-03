@@ -16,7 +16,7 @@ public class BarrierUI : MonoBehaviour
     private Vignette _vignette;
     private Coroutine _coroutine;
 
-    private void Start()
+    private void OnEnable()
     {
         bool check = _volume.profile.TryGet<Vignette>(out _vignette);
         Debug.Log($"TryGet 성공 여부 : {check}");

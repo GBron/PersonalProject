@@ -39,7 +39,6 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats = new PlayerStats();
         Stats.IsDied.Value = false;
         Stats.MaxHp.Value = 1;
-        Stats.CurHp.Value = Stats.MaxHp.Value;
         Stats.MoveSpeed = 5f;
         Stats.HookSpeed = 40f;
         Stats.HookRange = 40f;
@@ -47,11 +46,16 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.BulletCount = 3;
         Stats.HookCount = 3;
         Stats.BarrierCount = 3;
-        Stats.CurHookCount.Value = Stats.HookCount;
-        Stats.CurBulletCount.Value = Stats.BulletCount;
-        Stats.CurBarrierCount.Value = Stats.BarrierCount;
         HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);
         BulletPool = new ObjectPool(transform, _bulletPrefab, Stats.BulletCount);
+    }
+
+    public void PlayerStatReset()
+    {
+        Stats.CurHp.Value = Stats.MaxHp.Value;
+        Stats.CurBulletCount.Value = Stats.BulletCount;
+        Stats.CurHookCount.Value = Stats.HookCount;
+        Stats.CurBarrierCount.Value = Stats.BarrierCount;
     }
 
     public void InstantiatePlayer()
