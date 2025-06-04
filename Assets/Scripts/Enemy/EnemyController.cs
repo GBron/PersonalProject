@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     private int _hp = 1;
     private float _detectAngle = 45f;
     private float _detectRange = 75f;
-    private LayerMask _ignoreLayer = ~((1 << 8) | (1 << 9) | (1 << 11));
+    private LayerMask _ignoreLayer = ~((1 << 8) | (1 << 9) | (1 << 10) | (1 << 11));
     // private Collider[] _cols = new Collider[10];
     private bool _isPlayerDetected = false;
     private bool _canShot => _shotCoroutine == null;
