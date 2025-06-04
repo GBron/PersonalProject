@@ -38,6 +38,8 @@ public class InputManager : Singleton<InputManager>
 
     private void KeyboardInput()
     {
+        if (PlayerManager.Instance.IsPlayerDied) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ESCPress.Value = !ESCPress.Value;

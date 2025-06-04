@@ -16,11 +16,12 @@ public class PlayerManager : Singleton<PlayerManager>
     public ObjectPool BulletPool;
     public PlayerMovement Player;
     public Coroutine HookCoroutine;
-
+    public bool IsPlayerDied {  get; set; }
     public bool IsHooked { get; set; } = false;
     public bool IsHookMove { get; set; } = false;
 
     public UnityEvent<Vector3> HookedEvent;
+    public UnityEvent OnPlayerDie;
 
     private void Awake()
     {
@@ -42,7 +43,7 @@ public class PlayerManager : Singleton<PlayerManager>
         SingletonInit();
         _spawnPoint = new Vector3(3, 0, 3);
         Stats = new PlayerStats();
-        Stats.IsDied.Value = false;
+        IsPlayerDied = false;
         Stats.MaxHp.Value = 1;
         Stats.MoveSpeed = 5f;
         Stats.HookSpeed = 40f;
@@ -88,11 +89,9 @@ public class PlayerManager : Singleton<PlayerManager>
     public void TakeDamage(int damage)
     {
         if (Stats.CurBarrierCount.Value > 0)
-        {
             Stats.CurBarrierCount.Value -= damage;
-        }
-
-        Stats.CurHp.Value -= damage;
+        else
+            Stats.CurHp.Value -= damage;
 
         if (Stats.CurHp.Value <= 0)
         {
@@ -102,8 +101,8 @@ public class PlayerManager : Singleton<PlayerManager>
 
     private void Dying()
     {
-        // TODO: 플레이어가 사망했을 때 카메라 이동 후 사망 애니메이션 진행
-        Stats.IsDied.Value = true;
+        IsPlayerDied = true;
+        OnPlayerDie?.Invoke();
     }
 
     // 훅이 2초 이상 연결되어 있을 경우(플레이어가 턱에 끼임) 자동으로 IsHookMove를 false로

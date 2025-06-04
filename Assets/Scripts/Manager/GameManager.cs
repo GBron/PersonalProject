@@ -32,8 +32,6 @@ public class GameManager : Singleton<GameManager>
     public bool CanClear { get; set; }
     public bool InGame { get; set; }
 
-    
-
     private void Awake()
     {
         SingletonInit();
@@ -47,6 +45,7 @@ public class GameManager : Singleton<GameManager>
     {
         InputManager.Instance.ESCPress.Subscribe(OnMenuUI);
         InputManager.Instance.FPress.Subscribe(ClearCheat);
+        PlayerManager.Instance.OnPlayerDie.AddListener(GamePause);
     }
 
     private void Update()
@@ -59,6 +58,7 @@ public class GameManager : Singleton<GameManager>
     {
         InputManager.Instance.ESCPress.Unsubscribe(OnMenuUI);
         InputManager.Instance.FPress.Unsubscribe(ClearCheat);
+        PlayerManager.Instance.OnPlayerDie.RemoveListener(GamePause);
     }
 
     public void ClearCheat(bool value)
@@ -82,7 +82,9 @@ public class GameManager : Singleton<GameManager>
             case 0:
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                PlayerManager.Instance.IsPlayerDied = false;
                 InGame = false;
+                GameResume();
                 _title.gameObject.SetActive(true);
                 _hud.gameObject.SetActive(false);
                 _barrier.gameObject.SetActive(false);
@@ -95,6 +97,7 @@ public class GameManager : Singleton<GameManager>
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 InGame = false;
+                GameResume();
                 _title.gameObject.SetActive(false);
                 _hud.gameObject.SetActive(false);
                 _barrier.gameObject.SetActive(false);
@@ -119,14 +122,26 @@ public class GameManager : Singleton<GameManager>
         PlayerManager.Instance.IsHooked = false;
         InGame = true;
         IsTimeStop = false;
-        IsGamePaused = false;
         CanClear = false;
         Timer = 0;
+        GameResume();
         _title.gameObject.SetActive(false);
         _hud.gameObject.SetActive(true);
         _barrier.gameObject.SetActive(true);
         PlayerManager.Instance.InstantiatePlayer();
         CameraStacking();
+    }
+
+    public void GamePause()
+    {
+        Time.timeScale = 0f;
+        IsGamePaused = true;
+    }
+
+    public void GameResume()
+    {
+        Time.timeScale = 1;
+        IsGamePaused = false;
     }
 
     public void OnMenuUI(bool value)
@@ -140,16 +155,14 @@ public class GameManager : Singleton<GameManager>
             _menu.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            Time.timeScale = 1;
-            IsGamePaused = false;
+            GameResume();
             return;
         }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Time.timeScale = 0f;
+        GamePause();
         _menu.gameObject.SetActive(true);
-        IsGamePaused = true;
     }
 
     public void OnQuitConfirm()
