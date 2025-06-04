@@ -119,6 +119,14 @@ public class PlayerMovement : MonoBehaviour
         float distance = Vector3.Distance(_center.position, _destPos);
         float moveLimit = 0;
 
+        if (distance > 40f)
+        {
+            PlayerManager.Instance.IsHooked = false;
+            return;
+        }
+
+        Debug.Log($"훅이 걸린 좌표 {_destPos.x},{_destPos.y},{_destPos.z}");
+
         // 닿은 부분이 천장이라면 더 여유있게 메달리기
         Ray ray = new Ray(_center.position, (_destPos - _center.position).normalized);
 

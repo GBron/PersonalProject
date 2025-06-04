@@ -67,7 +67,7 @@ public class GrapplingHook : MonoBehaviour
         if (PlayerManager.Instance.Stats.CurHookCount.Value <= PlayerManager.Instance.Stats.HookCount)
         {
             // 실질적인 쿨타임
-            PlayerManager.Instance.Stats.CurHookCount.Value += 1 / 3f * Time.deltaTime;
+            PlayerManager.Instance.Stats.CurHookCount.Value += 1 / 2f * Time.deltaTime;
         }
     }
 }

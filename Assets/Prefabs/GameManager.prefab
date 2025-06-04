@@ -2078,6 +2078,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: 8315458581733463709, guid: e41fc8c3c20fc6f48b222ef400439946,
+        type: 3}
+      propertyPath: m_text
+      value: "\uC9C0\uAE08 \uB098\uAC00\uC2DC\uBA74\n\uAE30\uB85D\uC740 \uC800\uC7A5\uB418\uC9C0
+        \uC54A\uC2B5\uB2C8\uB2E4.\n\n\uC815\uB9D0 \uB098\uAC00\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+      objectReference: {fileID: 0}
     - target: {fileID: 8746820601631432587, guid: e41fc8c3c20fc6f48b222ef400439946,
         type: 3}
       propertyPath: m_AnchoredPosition.y
