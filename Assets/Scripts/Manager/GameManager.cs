@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
     // UI부분을 UI매니저로 빼내는걸 고려해야 할 것
     [field: SerializeField] public float MouseSensitivity { get; set; } = 1f;
+    [field: SerializeField] public Button Setting;
     [SerializeField] private Canvas _hud;
     [SerializeField] private Canvas _barrier;
     [SerializeField] private Canvas _menu;
@@ -16,6 +18,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Canvas _title;
     [SerializeField] private GameObject _quitConfirm;
     [SerializeField] private Camera _barriersCamera;
+
 
     private Dictionary<string, int> _sceneDir = new Dictionary<string, int>()
     {

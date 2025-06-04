@@ -1817,6 +1817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MouseSensitivity>k__BackingField: 1
+  Setting: {fileID: 5801936806165774947}
   _hud: {fileID: 258189727857727916}
   _barrier: {fileID: 6890719168471862125}
   _menu: {fileID: 3847602376663905658}
