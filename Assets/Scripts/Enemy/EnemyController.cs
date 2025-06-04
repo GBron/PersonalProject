@@ -21,12 +21,12 @@ public class EnemyController : MonoBehaviour
     private ObjectPool _bulletPool;
     private WaitForSeconds _wait = new WaitForSeconds(1f);
     private bool _isStop = false;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
         Init();
         GameManager.Instance.EnemyCount++;
-        Debug.Log($"적 숫자{GameManager.Instance.EnemyCount}");
     }
 
     private void Update()
@@ -37,13 +37,13 @@ public class EnemyController : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.EnemyCount--;
-        Debug.Log($"적 숫자{GameManager.Instance.EnemyCount}");
     }
 
     private void Init()
     {
         _bulletPool = new ObjectPool(transform, _bulletPrefab, 10);
         _laser = GetComponent<LineRenderer>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void TakeDamage(int damage)
@@ -149,6 +149,7 @@ public class EnemyController : MonoBehaviour
         RaycastHit hit = default;
         float timer = 0;
 
+        // 초기 추적
         while (timer < 1.5f)
         {
             bool nothing = Physics.Raycast(_muzzle.transform.position, _muzzle.transform.forward, out hit, _detectRange, _ignoreLayer);
@@ -173,6 +174,8 @@ public class EnemyController : MonoBehaviour
         timer = 0;
         _isStop = true;
 
+
+        // 락온
         while (timer < 0.3f)
         {
             bool nothing = Physics.Raycast(_muzzle.transform.position, _muzzle.transform.forward, out hit, _detectRange, _ignoreLayer);
@@ -194,11 +197,12 @@ public class EnemyController : MonoBehaviour
 
         _laser.enabled = false;
 
+        _audioSource.Play();
         EnemyBullet bullet = _bulletPool.PopPool() as EnemyBullet;
         bullet.transform.position = _muzzle.position;
         bullet.transform.rotation = _muzzle.rotation;
         Vector3 vec = (hit.point - bullet.transform.position).normalized;
-        bullet.Rigid.AddForce(vec * 150f, ForceMode.Impulse);
+        bullet.Rigid.AddForce(vec * 250f, ForceMode.Impulse);
 
         yield return _wait;
 

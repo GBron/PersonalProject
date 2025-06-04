@@ -50,7 +50,7 @@ MonoBehaviour:
     type: 3}
   _playerPrefab: {fileID: 3253123933342183582, guid: 4f38b8c23ef44be4d9b6ff275dc29a6b,
     type: 3}
-  _spawnPoint: {fileID: 0}
+  _gunAnim: {fileID: 0}
   Player: {fileID: 0}
   HookedEvent:
     m_PersistentCalls:

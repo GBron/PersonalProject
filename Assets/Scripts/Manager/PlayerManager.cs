@@ -1,6 +1,5 @@
 using Base;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,8 +8,9 @@ public class PlayerManager : Singleton<PlayerManager>
     [SerializeField] private PooledObject _hookPrefab;
     [SerializeField] private PooledObject _bulletPrefab;
     [SerializeField] private GameObject _playerPrefab;
-    private Vector3 _spawnPoint;
+    [SerializeField] private Animator _gunAnim;
 
+    private Vector3 _spawnPoint;
     public PlayerStats Stats;
     public ObjectPool HookPool;
     public ObjectPool BulletPool;
@@ -25,8 +25,13 @@ public class PlayerManager : Singleton<PlayerManager>
     private void Awake()
     {
         Init();
+    }
+
+    private void Start()
+    {
         SubscribedEvent();
     }
+
     private void OnDestroy()
     {
         UnsubscribedEvent();
@@ -48,6 +53,12 @@ public class PlayerManager : Singleton<PlayerManager>
         Stats.BarrierCount = 3;
         HookPool = new ObjectPool(transform, _hookPrefab, Stats.HookCount);
         BulletPool = new ObjectPool(transform, _bulletPrefab, Stats.BulletCount);
+    }
+
+    private void PlayGunShot(bool value)
+    {
+        if (PlayerManager.Instance.Stats.CurBulletCount.Value > 0)
+            _gunAnim.SetTrigger("Shot");
     }
 
     public void PlayerStatReset()
@@ -106,11 +117,11 @@ public class PlayerManager : Singleton<PlayerManager>
 
     private void SubscribedEvent()
     {
-
+        InputManager.Instance.MouseLClick.Subscribe(PlayGunShot);
     }
 
     private void UnsubscribedEvent()
     {
-
+        InputManager.Instance.MouseLClick.Unsubscribe(PlayGunShot);
     }
 }

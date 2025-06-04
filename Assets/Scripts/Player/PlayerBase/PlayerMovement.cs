@@ -70,13 +70,13 @@ public class PlayerMovement : MonoBehaviour
     private void PlayerJump(bool value)
     {
         // 바닥으로 레이캐스트를 쏘고 법선 백터랑 비교해 각도로 점프가 가능한지 판별
-        Ray ray = new Ray(PlayerManager.Instance.Player._center.position, Vector3.down);
+        Ray ray = new Ray(_center.position, Vector3.down);
 
-        if(Physics.Raycast(ray, out RaycastHit hit, 1.2f, _ignoreLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1.2f, _ignoreLayer))
         {
             float angle = Vector3.Angle(Vector3.up, hit.normal);
 
-            if(angle < 30f)
+            if (angle < 30f)
             {
                 _rigid.AddForce(transform.up * _jumpPower, ForceMode.Impulse);
                 _isGrounded = true;
@@ -117,9 +117,26 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 moveDir = (_destPos - _center.position).normalized;
         float distance = Vector3.Distance(_center.position, _destPos);
+        float moveLimit = 0;
+
+        // 닿은 부분이 천장이라면 더 여유있게 메달리기
+        Ray ray = new Ray(_center.position, (_destPos - _center.position).normalized);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 40f, _ignoreLayer))
+        {
+            float angle = Vector3.Angle(hit.normal, Vector3.down);
+            if (angle < 10f)
+            {
+                moveLimit = 2f;
+            }
+            else
+            {
+                moveLimit = 1.45f;
+            }
+        }
 
         // 훅이 지형에 닿을 경우 플레이어가 날아가는 로직. 날아가는 동안은 훅을 발사할 수 없음.
-        if (distance > 1.45f)
+        if (distance > moveLimit)
         {
             PlayerManager.Instance.IsHookMove = true;
             _rigid.velocity = moveDir * PlayerManager.Instance.Stats.HookSpeed;
