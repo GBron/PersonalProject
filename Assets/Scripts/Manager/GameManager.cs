@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
     public int EnemyCount { get; set; }
     public bool IsTimeStop { get; set; }
     public bool CanClear { get; set; }
+    public bool InGame { get; set; }
 
     
 
@@ -81,30 +82,19 @@ public class GameManager : Singleton<GameManager>
             case 0:
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                InGame = false;
                 _title.gameObject.SetActive(true);
                 _hud.gameObject.SetActive(false);
                 _barrier.gameObject.SetActive(false);
                 break;
             case 1:
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                PlayerManager.Instance.PlayerStatReset();
-                PlayerManager.Instance.IsHookMove = false;
-                PlayerManager.Instance.IsHooked = false;
-                IsTimeStop = false;
-                IsGamePaused = false;
-                CanClear = false;
-                Timer = 0;
-                _title.gameObject.SetActive(false);
-                _hud.gameObject.SetActive(true);
-                _barrier.gameObject.SetActive(true);
-                PlayerManager.Instance.InstantiatePlayer();
-                CameraStacking();
+                InGameInit();
                 // OnPlayerInit.Invoke();
                 break;
             case 2:
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                InGame = false;
                 _title.gameObject.SetActive(false);
                 _hud.gameObject.SetActive(false);
                 _barrier.gameObject.SetActive(false);
@@ -118,6 +108,25 @@ public class GameManager : Singleton<GameManager>
         {
             CanClear = true;
         }
+    }
+
+    private void InGameInit()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        PlayerManager.Instance.PlayerStatReset();
+        PlayerManager.Instance.IsHookMove = false;
+        PlayerManager.Instance.IsHooked = false;
+        InGame = true;
+        IsTimeStop = false;
+        IsGamePaused = false;
+        CanClear = false;
+        Timer = 0;
+        _title.gameObject.SetActive(false);
+        _hud.gameObject.SetActive(true);
+        _barrier.gameObject.SetActive(true);
+        PlayerManager.Instance.InstantiatePlayer();
+        CameraStacking();
     }
 
     public void OnMenuUI(bool value)
