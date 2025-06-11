@@ -5769,6 +5769,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1985412437422132134, guid: e6c1bab6dbbfe864394b1c075ff22280,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564824904327336826, guid: e6c1bab6dbbfe864394b1c075ff22280,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2620306960386629206, guid: e6c1bab6dbbfe864394b1c075ff22280,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6975489850731215972, guid: e6c1bab6dbbfe864394b1c075ff22280,
         type: 3}
       propertyPath: m_LocalPosition.x

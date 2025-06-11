@@ -60,7 +60,8 @@ namespace CustomUtility
             /// </summary>
             protected SaveData()
             {
-                FileName = this.GetType().ToString();
+                FileName = this.GetType().Name;
+                //FileName = this.GetType().ToString();
             }
         }
     }

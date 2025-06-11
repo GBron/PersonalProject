@@ -36,9 +36,10 @@ public class Hook : PooledObject
     {
         if (collision.gameObject.layer == 7 || collision.gameObject.layer == 6)
         {
+            Vector3 hitPoint = Rigid.position;
+            hookDest = hitPoint;
             _isFlying = false;
             Rigid.velocity = Vector3.zero;
-            hookDest = Rigid.position;
             PlayerManager.Instance.IsHooked = true;
             PlayerManager.Instance.HookedEvent.Invoke(hookDest);
             ReturnPool();

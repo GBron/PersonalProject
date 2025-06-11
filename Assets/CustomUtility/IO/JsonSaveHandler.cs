@@ -56,14 +56,23 @@ namespace CustomUtility
             /// <param name="target">The data object to load into. 데이터를 불러올 객체.</param>
             public override void Load<T>(ref T target)
             {
-                string filePath = GetFilePath(target.GetType().ToString());
+                string filePath = GetFilePath(target.FileName); // FileName 사용
+
+                if (!IsFileAccessible(filePath)) return; // 순서도 바꿔야 함
+
                 string jsonString = File.ReadAllText(filePath);
-                
-                if (!IsFileAccessible(filePath)) return;
-                
+
                 if (IsFileEmpty(jsonString, SaveType.JSON)) return;
-                
+
                 target = JsonUtility.FromJson<T>(jsonString);
+                // string filePath = GetFilePath(target.GetType().ToString());
+                // string jsonString = File.ReadAllText(filePath);
+                // 
+                // if (!IsFileAccessible(filePath)) return;
+                // 
+                // if (IsFileEmpty(jsonString, SaveType.JSON)) return;
+                // 
+                // target = JsonUtility.FromJson<T>(jsonString);
             }
         }
     }
